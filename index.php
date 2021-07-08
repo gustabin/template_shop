@@ -1,23 +1,329 @@
 <?php
-include_once "header.php";
+require_once('./tools/header.php');
+
+require_once('./tools/mypathdb.php');
 ?>
+<script>
+    function consultarEmpresa() {
+        $.ajax({
+            type: "POST",
+            url: "backend/empresaApi.php?option=consultar&id=TFVpNU9YVVNwc0ZkUGpTWjFFYTdmZz0",
+            dataType: "json",
+            data: $(this).serialize(),
+            success: function(respuesta) {
+                if (respuesta.error == 1) {
+                    swal("Houston, tenemos un problema", "No encontramos los datos", "error");
+                }
+                if (respuesta.exito == 1) {
+                    document.getElementById("telefono").innerHTML = respuesta.telefono;
+                    document.getElementById("telefonoTienda").innerHTML = respuesta.telefono;
+                    document.getElementById("telefonoTienda").href = "tel:" + respuesta.telefono;
+                    document.getElementById("nombre").innerHTML = respuesta.nombre;
+                    document.getElementById("nombreTienda").innerHTML = respuesta.nombre;
+                    document.getElementById("email").innerHTML = respuesta.email;
+                    document.getElementById("emailTienda").innerHTML = respuesta.email;
+                    document.getElementById("emailTienda").href = "mailto:" + respuesta.email;
+                    document.getElementById("titulo1").innerHTML = respuesta.titulo1;
+                    document.getElementById("subtitulo1").innerHTML = respuesta.subtitulo1;
+                    document.getElementById("descripcion1").innerHTML = respuesta.descripcion1;
+                    document.getElementById("titulo2").innerHTML = respuesta.titulo2;
+                    document.getElementById("subtitulo2").innerHTML = respuesta.subtitulo2;
+                    document.getElementById("descripcion2").innerHTML = respuesta.descripcion2;
+                    document.getElementById("titulo3").innerHTML = respuesta.titulo3;
+                    document.getElementById("subtitulo3").innerHTML = respuesta.subtitulo3;
+                    document.getElementById("descripcion3").innerHTML = respuesta.descripcion3;
+                    document.getElementById("facebook").href = respuesta.facebook;
+                    document.getElementById("facebookTienda").href = respuesta.facebook;
+                    document.getElementById("twitter").href = respuesta.twitter;
+                    document.getElementById("twitterTienda").href = respuesta.twitter;
+                    document.getElementById("instagram").href = respuesta.instagram;
+                    document.getElementById("instagramTienda").href = respuesta.instagram;
+                    document.getElementById("linkedin").href = respuesta.linkedin;
+                    document.getElementById("linkedinTienda").href = respuesta.linkedin;
+                    document.getElementById("emailLink").href = "mailto:" + respuesta.email;
+                    document.getElementById("direccion").innerHTML = respuesta.direccion;
+                    let imagen = respuesta.imagen;
+                    let imagen1 = respuesta.imagen1;
+                    let imagen2 = respuesta.imagen2;
+                    let imagen3 = respuesta.imagen3;
+                    ruta = respuesta.ruta;
+                    document.getElementById("imagen").src = ruta + imagen;
+                    document.getElementById("imagen1").src = ruta + imagen1;
+                    document.getElementById("imagen2").src = ruta + imagen2;
+                    document.getElementById("imagen3").src = ruta + imagen3;
+                }
+            }
+        })
+    }
 
+    function consultarContactos() {
+        $.ajax({
+            type: "POST",
+            url: "backend/contactosApi.php?option=consultar&id=TFVpNU9YVVNwc0ZkUGpTWjFFYTdmZz0",
+            dataType: "json",
+            data: $(this).serialize(),
+            success: function(respuesta) {
+                if (respuesta.error == 1) {
+                    swal("Houston, tenemos un problema", "No encontramos los datos", "error");
+                }
+                if (respuesta.exito == 1) {
+                    document.getElementById("cantidadMensajes").innerHTML = respuesta.cantidadMensajes;
+                }
+            }
+        })
+    }
 
+    function consultarCategorias() {
+        $.ajax({
+            type: "POST",
+            url: "backend/categoriasApi.php?option=consultar&id=TFVpNU9YVVNwc0ZkUGpTWjFFYTdmZz0",
+            dataType: "json",
+            data: $(this).serialize(),
+            success: function(respuesta) {
+
+                document.getElementById("nombreCategoria1").innerHTML = respuesta[0].nombre;
+                document.getElementById("nombreCategoria2").innerHTML = respuesta[1].nombre;
+                document.getElementById("nombreCategoria3").innerHTML = respuesta[2].nombre;
+
+                let imagenCategoria1 = respuesta[0].imagen;
+                let imagenCategoria2 = respuesta[1].imagen;
+                let imagenCategoria3 = respuesta[2].imagen;
+
+                document.getElementById("imagenCategoria1").src = ruta + "categorias/" + imagenCategoria1;
+                document.getElementById("imagenCategoria2").src = ruta + "categorias/" + imagenCategoria2;
+                document.getElementById("imagenCategoria3").src = ruta + "categorias/" + imagenCategoria3;
+            }
+        })
+    }
+
+    function consultarProductos() {
+        $.ajax({
+            type: "POST",
+            url: "backend/productosApi.php?option=consultar&id=TFVpNU9YVVNwc0ZkUGpTWjFFYTdmZz0",
+            dataType: "json",
+            data: $(this).serialize(),
+            success: function(respuesta) {
+
+                document.getElementById("nombreProducto1").innerHTML = respuesta[0].nombre.substr(0, 80);
+                document.getElementById("nombreProducto2").innerHTML = respuesta[1].nombre.substr(0, 80);
+                document.getElementById("nombreProducto3").innerHTML = respuesta[2].nombre.substr(0, 80);
+                document.getElementById("descripcionProducto1").innerHTML = respuesta[0].descripcion.substr(0, 300);
+                document.getElementById("descripcionProducto2").innerHTML = respuesta[1].descripcion.substr(0, 300);
+                document.getElementById("descripcionProducto3").innerHTML = respuesta[2].descripcion.substr(0, 300);
+                document.getElementById("precioProducto1").innerHTML = respuesta[0].precio;
+                document.getElementById("precioProducto2").innerHTML = respuesta[1].precio;
+                document.getElementById("precioProducto3").innerHTML = respuesta[2].precio;
+                idProducto1 = respuesta[0].id;
+                idProducto2 = respuesta[1].id;
+                idProducto3 = respuesta[2].id;
+                valorOpinion(1, idProducto1);
+                valorOpinion(2, idProducto2);
+                valorOpinion(3, idProducto3);
+
+                let imagenProducto1 = respuesta[0].imagen;
+                let imagenProducto2 = respuesta[1].imagen;
+                let imagenProducto3 = respuesta[2].imagen;
+
+                document.getElementById("imagenProducto1").src = ruta + "productos/" + imagenProducto1;
+                document.getElementById("imagenProducto2").src = ruta + "productos/" + imagenProducto2;
+                document.getElementById("imagenProducto3").src = ruta + "productos/" + imagenProducto3;
+            }
+        })
+    }
+
+    function consultarCalificacion(calificacion, numeroProducto) {
+        if (numeroProducto == 1) {
+            switch (calificacion) {
+                case 0:
+                    document.getElementById("imagenCalificacion1").src = ruta + "star0.png";
+                    break;
+                case 1:
+                    document.getElementById("imagenCalificacion1").src = ruta + "star1.png";
+                    break;
+                case 2:
+                    document.getElementById("imagenCalificacion1").src = ruta + "star2.png";
+                    break;
+                case 3:
+                    document.getElementById("imagenCalificacion1").src = ruta + "star3.png";
+                    break;
+                case 4:
+                    document.getElementById("imagenCalificacion1").src = ruta + "star4.png";
+                    break;
+                case 5:
+                    document.getElementById("imagenCalificacion1").src = ruta + "star5.png";
+                    break;
+                default:
+                    document.getElementById("imagenCalificacion1").src = ruta + "star0.png";
+                    break;
+            }
+        }
+        if (numeroProducto == 2) {
+            switch (calificacion) {
+                case 0:
+                    document.getElementById("imagenCalificacion2").src = ruta + "star0.png";
+                    break;
+                case 1:
+                    document.getElementById("imagenCalificacion2").src = ruta + "star1.png";
+                    break;
+                case 2:
+                    document.getElementById("imagenCalificacion2").src = ruta + "star2.png";
+                    break;
+                case 3:
+                    document.getElementById("imagenCalificacion2").src = ruta + "star3.png";
+                    break;
+                case 4:
+                    document.getElementById("imagenCalificacion2").src = ruta + "star4.png";
+                    break;
+                case 5:
+                    document.getElementById("imagenCalificacion2").src = ruta + "star5.png";
+                    break;
+                default:
+                    document.getElementById("imagenCalificacion2").src = ruta + "star0.png";
+                    break;
+            }
+        }
+        if (numeroProducto == 3) {
+            switch (calificacion) {
+                case 0:
+                    document.getElementById("imagenCalificacion3").src = ruta + "star0.png";
+                    break;
+                case 1:
+                    document.getElementById("imagenCalificacion3").src = ruta + "star1.png";
+                    break;
+                case 2:
+                    document.getElementById("imagenCalificacion3").src = ruta + "star2.png";
+                    break;
+                case 3:
+                    document.getElementById("imagenCalificacion3").src = ruta + "star3.png";
+                    break;
+                case 4:
+                    document.getElementById("imagenCalificacion3").src = ruta + "star4.png";
+                    break;
+                case 5:
+                    document.getElementById("imagenCalificacion3").src = ruta + "star5.png";
+                    break;
+                default:
+                    document.getElementById("imagenCalificacion3").src = ruta + "star0.png";
+                    break;
+            }
+        }
+
+    }
+
+    function valorCalificacion(numeroProducto) {
+        $.ajax({
+            type: "POST",
+            url: "backend/productosApi.php?option=consultar&id=TFVpNU9YVVNwc0ZkUGpTWjFFYTdmZz0",
+            dataType: "json",
+            data: $(this).serialize(),
+            success: function(respuesta) {
+                if (numeroProducto == 1) {
+                    consultarCalificacion(parseInt(respuesta[0].calificacion), numeroProducto)
+                }
+                if (numeroProducto == 2) {
+                    consultarCalificacion(parseInt(respuesta[1].calificacion), numeroProducto)
+                }
+                if (numeroProducto == 3) {
+                    consultarCalificacion(parseInt(respuesta[2].calificacion), numeroProducto)
+                }
+            }
+        })
+    }
+
+    function valorOpinion(numeroProducto, idProducto) {
+        // console.log("numeroProducto: " + numeroProducto);
+        // console.log("idProducto: " + idProducto);
+        $.ajax({
+            type: "POST",
+            url: "backend/opinionesApi.php?option=consultar&id=TFVpNU9YVVNwc0ZkUGpTWjFFYTdmZz0&idProducto=" + idProducto,
+            dataType: "json",
+            data: $(this).serialize(),
+            success: function(respuesta) {
+                if (numeroProducto == 1) {
+                    document.getElementById("totalOpiniones1").innerHTML = "Opiniones (" + respuesta.avgCalificacion + ")";
+                }
+                if (numeroProducto == 2) {
+                    document.getElementById("totalOpiniones2").innerHTML = "Opiniones (" + respuesta.avgCalificacion + ")";
+                }
+                if (numeroProducto == 3) {
+                    document.getElementById("totalOpiniones3").innerHTML = "Opiniones (" + respuesta.avgCalificacion + ")";
+                }
+            }
+        })
+    }
+
+    function buscarTodasCategorias() {
+        $.ajax({
+            type: "POST",
+            url: "backend/categoriasApi.php?option=consultar&id=TFVpNU9YVVNwc0ZkUGpTWjFFYTdmZz0",
+            dataType: "json",
+            data: $(this).serialize(),
+            success: function(respuesta) {
+                let res = document.querySelector('#listaTodasCategorias');
+                res.innerHTML = '';
+                for (let indice of respuesta) {
+                    res.innerHTML += `
+                    <li><a class="text-decoration-none" href="shop-single.php?categoria=${indice.nombre}">${indice.nombre}</a></li>
+                    `
+                }
+            }
+        })
+    }
+
+    localStorage.removeItem("bandera");
+
+    function incluirNewsletter() {
+        if (localStorage.getItem("bandera") === null) {
+            localStorage.setItem("bandera", "entro");
+            $("body").on('submit', '#formDefault', function(event) {
+                event.preventDefault()
+                if ($('#formDefault').valid()) {
+                    $.ajax({
+                        type: "POST",
+                        url: "backend/newsletterApi.php?option=incluir&id=TFVpNU9YVVNwc0ZkUGpTWjFFYTdmZz0",
+                        dataType: "json",
+                        data: $(this).serialize(),
+                        success: function(respuesta) {
+                            if (respuesta.error == 1) {
+                                swal("Houston, tenemos un problema", "Este email ya existe", "error");
+                            }
+                            if (respuesta.error == 2) {
+                                swal("Houston, tenemos un problema", "Ha ocurrido un error! comuníquese con el administrador del sistema", "error");
+                            }
+                            if (respuesta.error == 3) {
+                                swal("Houston, tenemos un problema", "El campo email es requerido", "error");
+                            }
+                            if (respuesta.exito == 1) {
+                                document.querySelector("#subscribeEmail").value = "";
+                                swal("Operación exitosa", "Datos guardados satisfactoriamente", "success");
+                            }
+                        }
+                    })
+                }
+            })
+        }
+    }
+</script>
 <!-- Start Top Nav -->
 <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
     <div class="container text-light">
         <div class="w-100 d-flex justify-content-between">
             <div>
                 <i class="fa fa-envelope mx-2"></i>
-                <a class="navbar-sm-brand text-light text-decoration-none" href="mailto:info@company.com">info@company.com</a>
+                <a class="navbar-sm-brand text-light text-decoration-none" href="" id="emailLink">
+                    <span id="email"></span>
+                </a>
                 <i class="fa fa-phone mx-2"></i>
-                <a class="navbar-sm-brand text-light text-decoration-none" href="tel:010-020-0340">010-020-0340</a>
+
+                <a class="navbar-sm-brand text-light text-decoration-none" href="tel:010-020-0340">
+                    <span id="telefono" name="telefono"></span>
+                </a>
             </div>
             <div>
-                <a class="text-light" href="https://fb.com/templatemo" target="_blank" rel="sponsored"><i class="fab fa-facebook-f fa-sm fa-fw me-2"></i></a>
-                <a class="text-light" href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram fa-sm fa-fw me-2"></i></a>
-                <a class="text-light" href="https://twitter.com/" target="_blank"><i class="fab fa-twitter fa-sm fa-fw me-2"></i></a>
-                <a class="text-light" href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin fa-sm fa-fw"></i></a>
+                <a class="text-light" href="" target="_blank" rel="sponsored" id="facebook"><i class="fab fa-facebook-f fa-sm fa-fw me-2"></i></a>
+                <a class="text-light" href="" target="_blank" id="instagram"><i class="fab fa-instagram fa-sm fa-fw me-2"></i></a>
+                <a class="text-light" href="" target="_blank" id="twitter"><i class="fab fa-twitter fa-sm fa-fw me-2"></i></a>
+                <a class="text-light" href="" target="_blank" id="linkedin"><i class="fab fa-linkedin fa-sm fa-fw"></i></a>
             </div>
         </div>
     </div>
@@ -29,10 +335,7 @@ include_once "header.php";
 <nav class="navbar navbar-expand-lg navbar-light shadow">
     <div class="container d-flex justify-content-between align-items-center">
 
-        <a class="navbar-brand text-success logo h1 align-self-center" href="index.php">
-            Zay
-        </a>
-
+        <img src="" alt="logo" id="imagen" name="imagen">
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -41,16 +344,16 @@ include_once "header.php";
             <div class="flex-fill">
                 <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php">Home</a>
+                        <a class="nav-link" href="index.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about.php">About</a>
+                        <a class="nav-link" href="about.php">Nosotros</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="shop.php">Shop</a>
+                        <a class="nav-link" href="shop.php">Tienda</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contact.php">Contact</a>
+                        <a class="nav-link" href="contact.php">Contacto</a>
                     </li>
                 </ul>
             </div>
@@ -72,7 +375,7 @@ include_once "header.php";
                 </a>
                 <a class="nav-icon position-relative text-decoration-none" href="#">
                     <i class="fa fa-fw fa-user text-dark mr-3"></i>
-                    <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span>
+                    <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark" id="cantidadMensajes"></span>
                 </a>
             </div>
         </div>
@@ -112,19 +415,13 @@ include_once "header.php";
             <div class="container">
                 <div class="row p-5">
                     <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                        <img class="img-fluid" src="./assets/img/banner_img_01.jpg" alt="">
+                        <img class="img-fluid" src="" alt="imagen" id="imagen1">
                     </div>
                     <div class="col-lg-6 mb-0 d-flex align-items-center">
                         <div class="text-align-left align-self-center">
-                            <h1 class="h1 text-success"><b>Zay</b> eCommerce</h1>
-                            <h3 class="h2">Tiny and Perfect eCommerce Template</h3>
-                            <p>
-                                Zay Shop is an eCommerce HTML5 CSS template with latest version of Bootstrap 5 (beta 1).
-                                This template is 100% free provided by <a rel="sponsored" class="text-success" href="https://templatemo.com" target="_blank">TemplateMo</a> website.
-                                Image credits go to <a rel="sponsored" class="text-success" href="https://stories.freepik.com/" target="_blank">Freepik Stories</a>,
-                                <a rel="sponsored" class="text-success" href="https://unsplash.com/" target="_blank">Unsplash</a> and
-                                <a rel="sponsored" class="text-success" href="https://icons8.com/" target="_blank">Icons 8</a>.
-                            </p>
+                            <h1 class="h1 text-success" id="titulo1"></h1>
+                            <h3 class="h2" id="subtitulo1"></h3>
+                            <p id="descripcion1"></p>
                         </div>
                     </div>
                 </div>
@@ -134,16 +431,13 @@ include_once "header.php";
             <div class="container">
                 <div class="row p-5">
                     <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                        <img class="img-fluid" src="./assets/img/banner_img_02.jpg" alt="">
+                        <img class="img-fluid" src="" alt="imagen slider" id="imagen2">
                     </div>
                     <div class="col-lg-6 mb-0 d-flex align-items-center">
                         <div class="text-align-left">
-                            <h1 class="h1">Proident occaecat</h1>
-                            <h3 class="h2">Aliquip ex ea commodo consequat</h3>
-                            <p>
-                                You are permitted to use this Zay CSS template for your commercial websites.
-                                You are <strong>not permitted</strong> to re-distribute the template ZIP file in any kind of template collection websites.
-                            </p>
+                            <h1 class="h1" id="titulo2"></h1>
+                            <h3 class="h2" id="subtitulo2"></h3>
+                            <p id="descripcion2"></p>
                         </div>
                     </div>
                 </div>
@@ -153,16 +447,13 @@ include_once "header.php";
             <div class="container">
                 <div class="row p-5">
                     <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                        <img class="img-fluid" src="./assets/img/banner_img_03.jpg" alt="">
+                        <img class="img-fluid" src="" alt="imagen slider" id="imagen3">
                     </div>
                     <div class="col-lg-6 mb-0 d-flex align-items-center">
                         <div class="text-align-left">
-                            <h1 class="h1">Repr in voluptate</h1>
-                            <h3 class="h2">Ullamco laboris nisi ut </h3>
-                            <p>
-                                We bring you 100% free CSS templates for your websites.
-                                If you wish to support TemplateMo, please make a small contribution via PayPal or tell your friends about our website. Thank you.
-                            </p>
+                            <h1 class="h1" id="titulo3"></h1>
+                            <h3 class="h2" id="subtitulo3"></h3>
+                            <p id="descripcion3"></p>
                         </div>
                     </div>
                 </div>
@@ -192,19 +483,19 @@ include_once "header.php";
     </div>
     <div class="row">
         <div class="col-12 col-md-4 p-5 mt-3">
-            <a href="#"><img src="./assets/img/category_img_01.jpg" class="rounded-circle img-fluid border"></a>
-            <h5 class="text-center mt-3 mb-3">Watches</h5>
-            <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
+            <a href="#"><img src="" class="rounded-circle img-fluid border" id="imagenCategoria1"></a>
+            <h5 class="text-center mt-3 mb-3" id="nombreCategoria1"></h5>
+            <p class="text-center"><a class="btn btn-success">Ir a la tienda</a></p>
         </div>
         <div class="col-12 col-md-4 p-5 mt-3">
-            <a href="#"><img src="./assets/img/category_img_02.jpg" class="rounded-circle img-fluid border"></a>
-            <h2 class="h5 text-center mt-3 mb-3">Shoes</h2>
-            <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
+            <a href="#"><img src="" class="rounded-circle img-fluid border" id="imagenCategoria2"></a>
+            <h2 class="h5 text-center mt-3 mb-3" id="nombreCategoria2"></h2>
+            <p class="text-center"><a class="btn btn-success">Ir a la tienda</a></p>
         </div>
         <div class="col-12 col-md-4 p-5 mt-3">
-            <a href="#"><img src="./assets/img/category_img_03.jpg" class="rounded-circle img-fluid border"></a>
-            <h2 class="h5 text-center mt-3 mb-3">Accessories</h2>
-            <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
+            <a href="#"><img src="" class="rounded-circle img-fluid border" id="imagenCategoria3"></a>
+            <h2 class="h5 text-center mt-3 mb-3" id="nombreCategoria3"></h2>
+            <p class="text-center"><a class="btn btn-success">Ir a la tienda</a></p>
         </div>
     </div>
 </section>
@@ -227,72 +518,48 @@ include_once "header.php";
             <div class="col-12 col-md-4 mb-4">
                 <div class="card h-100">
                     <a href="shop-single.php">
-                        <img src="./assets/img/feature_prod_01.jpg" class="card-img-top" alt="...">
+                        <img src="" class="card-img-top" alt="imagen producto" id="imagenProducto1">
                     </a>
                     <div class="card-body">
                         <ul class="list-unstyled d-flex justify-content-between">
-                            <li>
-                                <i class="text-warning fa fa-star"></i>
-                                <i class="text-warning fa fa-star"></i>
-                                <i class="text-warning fa fa-star"></i>
-                                <i class="text-muted fa fa-star"></i>
-                                <i class="text-muted fa fa-star"></i>
-                            </li>
-                            <li class="text-muted text-right">$240.00</li>
+                            <img src="" class="" alt="imagen calificacion" id="imagenCalificacion1">
+                            <li class="text-muted text-right" id="precioProducto1"></li>
                         </ul>
-                        <a href="shop-single.php" class="h2 text-decoration-none text-dark">Gym Weight</a>
-                        <p class="card-text">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt in culpa qui officia deserunt.
-                        </p>
-                        <p class="text-muted">Reviews (24)</p>
+                        <a href="shop-single.php" class="h2 text-decoration-none text-dark" id="nombreProducto1"></a>
+                        <p class="card-text" id="descripcionProducto1"></p>
+                        <p class="text-muted" id="totalOpiniones1"></p>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-md-4 mb-4">
                 <div class="card h-100">
                     <a href="shop-single.php">
-                        <img src="./assets/img/feature_prod_02.jpg" class="card-img-top" alt="...">
+                        <img src="" class="card-img-top" alt="imagen producto" id="imagenProducto2">
                     </a>
                     <div class="card-body">
                         <ul class="list-unstyled d-flex justify-content-between">
-                            <li>
-                                <i class="text-warning fa fa-star"></i>
-                                <i class="text-warning fa fa-star"></i>
-                                <i class="text-warning fa fa-star"></i>
-                                <i class="text-muted fa fa-star"></i>
-                                <i class="text-muted fa fa-star"></i>
-                            </li>
-                            <li class="text-muted text-right">$480.00</li>
+                            <img src="" class="" alt="imagen calificacion" id="imagenCalificacion2">
+                            <li class="text-muted text-right" id="precioProducto2"></li>
                         </ul>
-                        <a href="shop-single.php" class="h2 text-decoration-none text-dark">Cloud Nike Shoes</a>
-                        <p class="card-text">
-                            Aenean gravida dignissim finibus. Nullam ipsum diam, posuere vitae pharetra sed, commodo ullamcorper.
-                        </p>
-                        <p class="text-muted">Reviews (48)</p>
+                        <a href="shop-single.php" class="h2 text-decoration-none text-dark" id="nombreProducto2"></a>
+                        <p class="card-text" id="descripcionProducto2"></p>
+                        <p class="text-muted" id="totalOpiniones2"></p>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-md-4 mb-4">
                 <div class="card h-100">
                     <a href="shop-single.php">
-                        <img src="./assets/img/feature_prod_03.jpg" class="card-img-top" alt="...">
+                        <img src="" class="card-img-top" alt="imagen producto" id="imagenProducto3">
                     </a>
                     <div class="card-body">
                         <ul class="list-unstyled d-flex justify-content-between">
-                            <li>
-                                <i class="text-warning fa fa-star"></i>
-                                <i class="text-warning fa fa-star"></i>
-                                <i class="text-warning fa fa-star"></i>
-                                <i class="text-warning fa fa-star"></i>
-                                <i class="text-warning fa fa-star"></i>
-                            </li>
-                            <li class="text-muted text-right">$360.00</li>
+                            <img src="" class="" alt="imagen calificacion" id="imagenCalificacion3">
+                            <li class="text-muted text-right" id="precioProducto3"></li>
                         </ul>
-                        <a href="shop-single.php" class="h2 text-decoration-none text-dark">Summer Addides Shoes</a>
-                        <p class="card-text">
-                            Curabitur ac mi sit amet diam luctus porta. Phasellus pulvinar sagittis diam, et scelerisque ipsum lobortis nec.
-                        </p>
-                        <p class="text-muted">Reviews (74)</p>
+                        <a href="shop-single.php" class="h2 text-decoration-none text-dark" id="nombreProducto3"></a>
+                        <p class="card-text" id="descripcionProducto3"></p>
+                        <p class="text-muted" id="totalOpiniones3"></p>
                     </div>
                 </div>
             </div>
@@ -301,7 +568,6 @@ include_once "header.php";
 </section>
 <!-- End Featured Product -->
 
-
 <?php
-include_once "footer.php";
+require_once('./tools/footer.php');
 ?>

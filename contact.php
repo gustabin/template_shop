@@ -1,5 +1,5 @@
 <?php
-include_once "header.php";
+require_once('./tools/header.php');
 ?>
 
 <!-- Start Top Nav -->
@@ -167,5 +167,5 @@ include_once "header.php";
 
 
 <?php
-include_once "footer.php";
+require_once('./tools/footer.php');
 ?>

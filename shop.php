@@ -1,5 +1,5 @@
 <?php
-include_once "header.php";
+require_once('./tools/header.php');
 ?>
 <!-- Start Top Nav -->
 <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
@@ -624,6 +624,6 @@ include_once "header.php";
 
 
 <?php
-include_once "footer.php";
+require_once('./tools/footer.php');
 ?>
 <!-- End Script -->
